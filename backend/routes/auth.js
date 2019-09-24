@@ -3,7 +3,7 @@ const User = require('../models/user.model');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
-router.post('/register',async (req, res) => {
+router.post('/user/register',async (req, res) => {
  
     //generate hashedPassword
     const salt = await bcrypt.genSalt(10);
@@ -28,7 +28,7 @@ router.post('/register',async (req, res) => {
 
 });
 
-router.post('/login',async (req, res) => {
+router.post('/user/login',async (req, res) => {
     const user = await User.findOne({username : req.body.username});
     if(! user ) return res.status(400).send('username does not exist, please register!');
 

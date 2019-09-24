@@ -23,8 +23,8 @@ const commentsRouter = require('./routes/comments');
 //const usersRouter = require('./routes/users');
 
 // app.use('/users',usersRouter);
-app.use('/api/user',authRouter);
-app.use('/comments',commentsRouter);
+app.use('/api/user-management',authRouter);
+app.use('/api/comment-management',commentsRouter);
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
