@@ -9,6 +9,9 @@ router.post('/register',async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(req.body.password, salt);
 
+    const userExists = User.findOne({username:req.body.username});
+    if(userExists) return res.status(400).send("Username exists!");
+
     //create user
     const user = new User({
         username : req.body.username,
@@ -26,13 +29,13 @@ router.post('/register',async (req, res) => {
 });
 
 router.post('/login',async (req, res) => {
-    const user = await User.findOne({username : username});
+    const user = await User.findOne({username : req.body.username});
     if(! user ) return res.status(400).send('username does not exist, please register!');
 
     const validPass = await bcrypt.compare(req.body.password, user.hash);
     if(!validPass) return res.status(400).send('Password is invalid!');
 
-    //create token
+    //create token and add it to header
     const token = jwt.sign({ _id : user._id},process.env.TOKEN_SECRET);
     res.header('auth-header',token);
     res.json({success: true, message: 'Logged in'});
