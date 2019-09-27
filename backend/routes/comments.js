@@ -29,7 +29,7 @@ router.put('/update/:id', verify, async (req,res) => {
 
     console.log(req.user);
     try {
-        const a = await Comment.findByIdAndUpdate(req.params.id, { $inc: { upvotes : req.body.upvotes, downvotes: req.body.downvotes }});
+        await Comment.findByIdAndUpdate(req.params.id, { $inc: { upvotes : req.body.upvotes, downvotes: req.body.downvotes }});
         res.send({ "success": true });
     }catch(err){
         res.status(400).send(err);
