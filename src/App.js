@@ -1,17 +1,16 @@
 import React from 'react';
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
-import Navbar from './components/navbar.component';
-import ListComments from './components/list-comments.component';
-import AddComment from './components/add-comment.component';
+import RegisterUser from './components/register-user.component';
+import Home from './components/home-component';
 
 function App() {
   return (
     <Router>
     <div className="container">
-      <Navbar/>
-      <Route path='/' exact component={ListComments} />
-      <Route path='/add' component={AddComment} />
+      <br/>
+      <Route path="/" exact component={Home} />
+      <Route path="/register" component={RegisterUser}/>
     </div>
    </Router>
   );
