@@ -2,7 +2,7 @@ const router = require('express').Router();
 const Comment = require('../models/comment.model');
 const verify = require('./verifyToken'); 
 
-router.get('/', verify , (req,res) => {
+router.get('/' , (req,res) => {
     Comment.find().sort({'createdAt':-1})
         .then(comments => res.json(comments))
         .catch(err => res.status(400).json('Error' + err));

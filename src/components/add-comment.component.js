@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import axios from 'axios';
 
 export default class AddComment extends Component {
 
@@ -9,7 +10,6 @@ export default class AddComment extends Component {
     this.onSubmit = this.onSubmit.bind(this);
 
     this.state = {
-        userid: '',
         content: '',
         upvotes: 0,
         downvotes: 0
@@ -24,11 +24,23 @@ export default class AddComment extends Component {
    onSubmit(e){
      e.preventDefault();
      const comment = {
-         userid : 'somerandom', //TODO : replace this with logged in user
          content : this.state.content,
      }
-     console.log(comment);
-   //  window.location = '/';
+      const jwt = sessionStorage.getItem("jwt-token");
+      if(jwt === null){
+        console.log('not logged in');
+        window.location = '/login';
+      }
+      const headers = { headers: {
+        "Accept": "application/json",
+        "Content-type": "application/json",
+        "auth-header": jwt,
+        }
+      }
+      axios.post('http://localhost:5000/api/comments/add', comment, headers)
+        .then(res => console.log(res.data))
+        .catch(err => console.log(err));
+
    }
 
   render() {

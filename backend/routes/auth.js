@@ -29,9 +29,11 @@ router.post('/register',async (req, res) => {
 });
 
 router.post('/login',async (req, res) => {
+    
     const user = await User.findOne({username : req.body.username});
     if(! user ) return res.status(400).send('username does not exist, please register!');
 
+    console.log(user);
     const validPass = await bcrypt.compare(req.body.password, user.hash);
     if(!validPass) return res.status(400).send('Password is invalid!');
 
