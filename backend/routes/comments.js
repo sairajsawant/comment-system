@@ -3,7 +3,9 @@ const Comment = require('../models/comment.model');
 const verify = require('./verifyToken'); 
 
 router.get('/' , (req,res) => {
-    Comment.find().sort({'createdAt':-1})
+    Comment.find()
+        .populate('user')
+        .sort({'createdAt':-1})
         .then(comments => res.json(comments))
         .catch(err => res.status(400).json('Error' + err));
 });
@@ -19,7 +21,8 @@ router.post('/add', verify,async (req,res) => {
     });
     try {
         const savedComment = await comment.save();
-        res.send({commentid : savedComment._id }); 
+        const savedCommentWithUserData = await Comment.findById(savedComment._id).populate('user');
+        res.send(savedCommentWithUserData); 
     }catch(err){
         res.status(400).send(err);
     }

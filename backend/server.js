@@ -24,11 +24,29 @@ connection.once('open', () => {
  
 const authRouter = require('./routes/auth');
 const commentsRouter = require('./routes/comments');
-//const usersRouter = require('./routes/users');
 
-// app.use('/users',usersRouter);
 app.use('/api/users',authRouter);
 app.use('/api/comments',commentsRouter);
+
+const WebSocket = require('ws');
+
+const wss = new WebSocket.Server({ port: 8080 });
+
+wss.on('connection', function connection(ws) {
+  ws.on('message', function incoming(message) {
+    console.log(message) ;
+    //ws.emit(message);
+    wss.broadcast(message);
+  });
+  
+});
+
+wss.broadcast = function broadcast(data) {
+  wss.clients.forEach(function each(client) {
+    client.send(data);
+  });
+};
+
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);

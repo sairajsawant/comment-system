@@ -51,7 +51,6 @@ export default class RegisterUser extends Component {
             lastName : this.state.lastName,
             hash : this.state.password
         }
-       // console.log(user);
         axios.post('http://localhost:5000/api/users/register', user)
             .then(res => console.log(res.data))
             .catch(err => console.log(err));
