@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
-const expressWs = require('express-ws')
+const expressWs = require('express-ws');
 
 require('dotenv').config();
 
@@ -31,22 +31,6 @@ const commentsRouter = require('./routes/comments');
 app.use('/api/users',authRouter);
 app.use('/api/comments',commentsRouter);
 
-// wss.on('connection', function connection(ws) {
-//   ws.on('message', function incoming(message) {
-//     console.log(message) ;
-//     //ws.emit(message);
-//     wss.broadcast(message);
-//   });
-  
-// });
-
-// wss.broadcast = function broadcast(data) {
-//   wss.clients.forEach(function each(client) {
-//     client.send(data);
-//   });
-// };
-
-
 app.ws('/comment', (ws, req) => {
 
     ws.on('message', function incoming(message) {
@@ -60,21 +44,6 @@ app.ws('/comment', (ws, req) => {
       });
     };
 })
-
-app.ws('/upvote', (ws, req) => {
-
-  ws.on('message', function incoming(message) {
-    console.log(message) ;
-    ws.broadcast(message);
-  });
-
-  ws.broadcast = function broadcast(data) {
-    wsInstance.getWss().clients.forEach(function each(client) {
-    client.send(data);
-    });
-  };
-})
-
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);

@@ -97,7 +97,7 @@ export default class ListComments extends Component {
             { this.commentList() }
           </tbody>
         </table>
-      </div>
+     </div>
     );
   }
 }

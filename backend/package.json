@@ -15,7 +15,6 @@
     "express": "^4.17.1",
     "express-ws": "^4.0.0",
     "jsonwebtoken": "^8.5.1",
-    "mongoose": "^5.7.1",
-    "sockjs": "^0.3.19"
+    "mongoose": "^5.7.1"
   }
 }
