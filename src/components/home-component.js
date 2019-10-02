@@ -14,16 +14,8 @@ export default class Home extends Component {
     const self = this;
     sock.onmessage = function(e) {
           const message = JSON.parse(e.data);
-          if(message.type === "comment"){
-            const dataToSend = JSON.stringify(message);
-            self.setState({ comment: dataToSend });  
-          }
-          else if(message.type === "upvote"){
-            console.log(message.data);
-            const dataToSend = JSON.stringify(message);
-            self.setState({ comment : dataToSend });
-          }
-          
+          const dataToSend = JSON.stringify(message);
+          self.setState({ comment: dataToSend });
     };
 
     this.state = {

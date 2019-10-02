@@ -11,6 +11,11 @@ class Comment extends Component {
       this.handleUpvote = this.handleUpvote.bind(this);
       this.handleDownvote = this.handleDownvote.bind(this);
 
+      this.state = {
+        upvoted : false,
+        downvoted : false
+      }
+
     }
 
     handleUpvote(){
@@ -30,14 +35,13 @@ class Comment extends Component {
     }
     render() {
       return (
-      <div class="p-4">
+      <div>
         <div className="p-1"><h5>{this.props.comment.user.firstName} {this.props.comment.user.lastName}</h5></div>
         <div>
         <h6>{this.props.comment.content }</h6>
-        <div/>
-        <div>  
-        <div><span ref={this.upvotes}>{this.props.comment.upvotes}</span> <button onClick={this.handleUpvote}>Upvote</button></div>
-        <span ref={this.downvotes}>{this.props.comment.downvotes}</span>  <button onClick={this.handleDownvote}>Downvote</button>
+        <div align="right">  
+       <div><span ref={this.upvotes}>{this.props.comment.upvotes}</span> <button onClick={this.handleUpvote}>Upvote</button></div>
+        <div><span ref={this.downvotes}>{this.props.comment.downvotes}</span>  <button onClick={this.handleDownvote}>Downvote</button></div>
         </div>
         </div>
        
@@ -67,13 +71,10 @@ export default class ListComments extends Component {
     console.log(data.data);
     if(data.type === "upvote"){
       let cloneComments = [...this.state.comments]
-      console.log(cloneComments);
-      
-      cloneComments.forEach(comm => {
-        if(comm._id == data.data.comment._id){
-          comm = data.data.comment
-        }
-      });
+      const foundIndex = cloneComments.findIndex(x => x._id == data.data.comment._id );
+      console.log(foundIndex)
+      cloneComments[foundIndex] = data.data.comment
+       
       this.setState({ comments : cloneComments });
     }
     else if(data.type === "comment"){
