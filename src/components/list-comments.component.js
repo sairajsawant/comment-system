@@ -29,13 +29,19 @@ class Comment extends Component {
       
     }
     render() {
-      return (  
-      <tr>
-        <td>{this.props.comment.user.firstName} {this.props.comment.user.lastName}</td>
-        <td>{this.props.comment.content }</td>
-        <td> <span ref={this.upvotes}>{this.props.comment.upvotes}</span> <button onClick={this.handleUpvote}>Upvote</button> </td>
-        <td> <span ref={this.downvotes}>{this.props.comment.downvotes}</span>  <button onClick={this.handleDownvote}>Downvote</button> </td>
-      </tr>
+      return (
+      <div class="p-4">
+        <div className="p-1"><h5>{this.props.comment.user.firstName} {this.props.comment.user.lastName}</h5></div>
+        <div>
+        <h6>{this.props.comment.content }</h6>
+        <div/>
+        <div>  
+        <div><span ref={this.upvotes}>{this.props.comment.upvotes}</span> <button onClick={this.handleUpvote}>Upvote</button></div>
+        <span ref={this.downvotes}>{this.props.comment.downvotes}</span>  <button onClick={this.handleDownvote}>Downvote</button>
+        </div>
+        </div>
+       
+      </div>
     )
 
     }
@@ -82,21 +88,9 @@ export default class ListComments extends Component {
   }
   render() {
     return (
-      <div>
+      <div className="d-flex flex-column">
       <h3>Comments</h3>
-      <table className="table">
-          <thead className="thead-light">
-            <tr>
-              <th>Username</th>
-              <th>Content</th>
-              <th>Upvotes</th>
-              <th>Downvotes</th>
-            </tr>
-          </thead>
-          <tbody>
-            { this.commentList() }
-          </tbody>
-        </table>
+        { this.commentList() }
      </div>
     );
   }
