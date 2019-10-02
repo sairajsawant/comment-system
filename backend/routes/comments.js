@@ -28,11 +28,11 @@ router.post('/add', verify,async (req,res) => {
     }
 })
 
-router.put('/update/:id', verify, async (req,res) => {
+router.put('/update/', verify, async (req,res) => {
 
     console.log(req.user);
     try {
-        await Comment.findByIdAndUpdate(req.params.id, { $inc: { upvotes : req.body.upvotes, downvotes: req.body.downvotes }});
+        await Comment.findByIdAndUpdate(req.body._id, { upvotes : req.body.upvotes, downvotes: req.body.downvotes });
         res.send({ "success": true });
     }catch(err){
         res.status(400).send(err);

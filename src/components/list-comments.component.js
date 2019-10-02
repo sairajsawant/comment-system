@@ -8,8 +8,7 @@ class Comment extends Component {
       super(props);
       this.upvotes = React.createRef();
       this.downvotes = React.createRef();
-      this.handleUpvote = this.handleUpvote.bind(this);
-      this.handleDownvote = this.handleDownvote.bind(this);
+      this.handleUpvoteDownvote = this.handleUpvoteDownvote.bind(this);
 
       this.state = {
         upvoted : false,
@@ -18,21 +17,49 @@ class Comment extends Component {
 
     }
 
-    handleUpvote(){
+    handleUpvoteDownvote(e){
+      console.log(e.target.name);
       console.log(this.props);
-      const json = { type: 'upvote' };
+      const json = { type: e.target.name };
       json.data = this.props;
-      json.data.comment.upvotes++;
+      if(e.target.name === "upvote"){
+        if(this.state.downvoted){
+          json.data.comment.downvotes--;
+          this.setState({downvoted : false});
+        }
+        json.data.comment.upvotes++;
+        this.setState({upvoted : true});  
+      }
+      else {
+        if(this.state.upvoted){
+          json.data.comment.upvotes--;
+          this.setState({upvoted : false});
+        }
+        json.data.comment.downvotes++;
+        this.setState({downvoted : true});     
+      }
       console.log(json);
       this.props.socket.send(JSON.stringify(json));
-      
-    }
+      const jwt = sessionStorage.getItem("jwt-token");
+      if(jwt === null){
+        console.log('not logged in');
+        window.location = '/login';
+      }
+      const headers = { headers: {
+        "Accept": "application/json",
+        "Content-type": "application/json",
+        "auth-header": jwt,
+        }
+      }
+      // sync with db/redis
+      axios.put('http://localhost:5000/api/comments/update', json.data.comment, headers)
+        .then(res => { 
+          console.log(res);
+          
+        })
+        .catch(err => console.log(err));
+      }
 
-    handleDownvote(){
-      this.downvotes.current.innerHTML++;
-      console.log(this.downvotes.current.innerHTML);
-      
-    }
     render() {
       return (
       <div>
@@ -40,8 +67,8 @@ class Comment extends Component {
         <div>
         <h6>{this.props.comment.content }</h6>
         <div align="right">  
-       <div><span ref={this.upvotes}>{this.props.comment.upvotes}</span> <button onClick={this.handleUpvote}>Upvote</button></div>
-        <div><span ref={this.downvotes}>{this.props.comment.downvotes}</span>  <button onClick={this.handleDownvote}>Downvote</button></div>
+       <div><span ref={this.upvotes} >{this.props.comment.upvotes}</span> <button name="upvote" disabled={this.state.upvoted} onClick={this.handleUpvoteDownvote}>Upvote</button></div>
+        <div><span ref={this.downvotes}>{this.props.comment.downvotes}</span>  <button name="downvote" disabled={this.state.downvoted} onClick={this.handleUpvoteDownvote}>Downvote</button></div>
         </div>
         </div>
        
@@ -69,12 +96,12 @@ export default class ListComments extends Component {
     
     const data = JSON.parse(nextProps.comment);
     console.log(data.data);
-    if(data.type === "upvote"){
+    if(data.type === "upvote" || data.type === "downvote"){
       let cloneComments = [...this.state.comments]
       const foundIndex = cloneComments.findIndex(x => x._id == data.data.comment._id );
       console.log(foundIndex)
       cloneComments[foundIndex] = data.data.comment
-       
+
       this.setState({ comments : cloneComments });
     }
     else if(data.type === "comment"){
