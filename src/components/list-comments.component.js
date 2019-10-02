@@ -2,22 +2,50 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 
-const Comment = props => (
+class Comment extends Component {
 
-  <tr>
-    <td>{props.comment.user.firstName} {props.comment.user.lastName}</td>
-    <td>{props.comment.content }</td>
-    <td>{props.comment.upvotes}  <button>Upvote</button> </td>
-    <td>{props.comment.downvotes}  <button>Downvote</button> </td>
-  </tr>
-  
-)
+    constructor(props){
+      super(props);
+      this.upvotes = React.createRef();
+      this.downvotes = React.createRef();
+      this.handleUpvote = this.handleUpvote.bind(this);
+      this.handleDownvote = this.handleDownvote.bind(this);
+
+    }
+
+    handleUpvote(){
+      console.log(this.props);
+      const json = { type: 'upvote' };
+      json.data = this.props;
+      json.data.comment.upvotes++;
+      console.log(json);
+      this.props.socket.send(JSON.stringify(json));
+      
+    }
+
+    handleDownvote(){
+      this.downvotes.current.innerHTML++;
+      console.log(this.downvotes.current.innerHTML);
+      
+    }
+    render() {
+      return (  
+      <tr>
+        <td>{this.props.comment.user.firstName} {this.props.comment.user.lastName}</td>
+        <td>{this.props.comment.content }</td>
+        <td> <span ref={this.upvotes}>{this.props.comment.upvotes}</span> <button onClick={this.handleUpvote}>Upvote</button> </td>
+        <td> <span ref={this.downvotes}>{this.props.comment.downvotes}</span>  <button onClick={this.handleDownvote}>Downvote</button> </td>
+      </tr>
+    )
+
+    }
+   
+}
 
 export default class ListComments extends Component {
 
   constructor(props){
     super(props);
-
     this.state = { comments: [] }
   }
 
@@ -28,12 +56,28 @@ export default class ListComments extends Component {
   }
 
   componentWillReceiveProps(nextProps){
-    this.setState({ comments : [JSON.parse(nextProps.comment), ...this.state.comments] })
-  }
+    
+    const data = JSON.parse(nextProps.comment);
+    console.log(data.data);
+    if(data.type === "upvote"){
+      let cloneComments = [...this.state.comments]
+      console.log(cloneComments);
+      
+      cloneComments.forEach(comm => {
+        if(comm._id == data.data.comment._id){
+          comm = data.data.comment
+        }
+      });
+      this.setState({ comments : cloneComments });
+    }
+    else if(data.type === "comment"){
+      this.setState({ comments : [data.data, ...this.state.comments] })
+    }
+  } 
 
-  commentList() {
+  commentList() {  
     return this.state.comments.map(currentcomment => {
-      return <Comment comment={currentcomment} key={currentcomment._id}/>;
+      return <Comment comment={currentcomment} socket={this.props.actions} key={currentcomment._id}/>;
     })
   }
   render() {

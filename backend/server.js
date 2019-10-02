@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
+const expressWs = require('express-ws')
 
 require('dotenv').config();
 
@@ -13,6 +14,8 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 app.use(express.json());
+
+const wsInstance = expressWs(app);
 
 const uri = process.env.DB_URI;
 mongoose.connect(uri, { useNewUrlParser: true, useCreateIndex:true, useUnifiedTopology: true, useFindAndModify : true });
@@ -28,24 +31,49 @@ const commentsRouter = require('./routes/comments');
 app.use('/api/users',authRouter);
 app.use('/api/comments',commentsRouter);
 
-const WebSocket = require('ws');
+// wss.on('connection', function connection(ws) {
+//   ws.on('message', function incoming(message) {
+//     console.log(message) ;
+//     //ws.emit(message);
+//     wss.broadcast(message);
+//   });
+  
+// });
 
-const wss = new WebSocket.Server({ port: 8080 });
+// wss.broadcast = function broadcast(data) {
+//   wss.clients.forEach(function each(client) {
+//     client.send(data);
+//   });
+// };
 
-wss.on('connection', function connection(ws) {
+
+app.ws('/comment', (ws, req) => {
+
+    ws.on('message', function incoming(message) {
+      console.log(message) ;
+      ws.broadcast(message);
+    });
+
+    ws.broadcast = function broadcast(data) {
+      wsInstance.getWss().clients.forEach(function each(client) {
+      client.send(data);
+      });
+    };
+})
+
+app.ws('/upvote', (ws, req) => {
+
   ws.on('message', function incoming(message) {
     console.log(message) ;
-    //ws.emit(message);
-    wss.broadcast(message);
+    ws.broadcast(message);
   });
-  
-});
 
-wss.broadcast = function broadcast(data) {
-  wss.clients.forEach(function each(client) {
+  ws.broadcast = function broadcast(data) {
+    wsInstance.getWss().clients.forEach(function each(client) {
     client.send(data);
-  });
-};
+    });
+  };
+})
 
 
 app.listen(port, () => {

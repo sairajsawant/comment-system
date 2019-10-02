@@ -9,8 +9,6 @@ export default class AddComment extends Component {
     this.onChangeContent = this.onChangeContent.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
 
-    this.contentBox = React.createRef();
-
     this.state = {
         content: '',
         upvotes: 0,
@@ -42,8 +40,10 @@ export default class AddComment extends Component {
       }
       axios.post('http://localhost:5000/api/comments/add', comment, headers)
         .then(res => { 
-          console.log(res.data);
-          this.props.actions.send(JSON.stringify(res.data));
+          const json = { type: 'comment' };
+          json.data = res.data;
+          console.log(json);
+          this.props.actions.send(JSON.stringify(json));
           this.setState({content : ''})
           
         })
