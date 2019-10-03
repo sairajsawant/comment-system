@@ -12,7 +12,7 @@
 
 - [x] Realtime comments & upvotes/downvotes using **WebSockets** & **Redis**
 
-- [x] JWT based authorization
+- [x] **JWT** based authorization
 
 - [x] Microservice architecture using **Node.js** & **Express**
 
