@@ -32,6 +32,7 @@ export default class AddComment extends Component {
         console.log('not logged in');
         window.location = '/login';
       }
+      else {
       const headers = { headers: {
         "Accept": "application/json",
         "Content-type": "application/json",
@@ -49,6 +50,7 @@ export default class AddComment extends Component {
         })
         .catch(err => console.log(err));
       }
+    }
    
   render() {
     return (

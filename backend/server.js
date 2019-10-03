@@ -14,7 +14,6 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 app.use(express.json());
-
 const wsInstance = expressWs(app);
 
 const uri = process.env.DB_URI;
@@ -27,9 +26,11 @@ connection.once('open', () => {
  
 const authRouter = require('./routes/auth');
 const commentsRouter = require('./routes/comments');
+const cacheRouter = require('./routes/cache');
 
 app.use('/api/users',authRouter);
 app.use('/api/comments',commentsRouter);
+app.use('/api/cache', cacheRouter);
 
 app.ws('/comment', (ws, req) => {
 

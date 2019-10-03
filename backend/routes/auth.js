@@ -5,12 +5,14 @@ const jwt = require('jsonwebtoken');
 
 router.post('/register',async (req, res) => {
  
+    console.log(req.body);
+
     //generate hashedPassword
     const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(req.body.password, salt);
+    const hashedPassword = await bcrypt.hash(req.body.hash, salt);
 
-    const userExists = User.findOne({username:req.body.username});
-    if(userExists) return res.status(400).send("Username exists!");
+    // const userExists = User.findOne({username:req.body.username});
+    // if(userExists) return res.status(400).send("Username exists!");
 
     //create user
     const user = new User({
@@ -23,6 +25,8 @@ router.post('/register',async (req, res) => {
         const savedUser = await user.save();
         res.send({user : savedUser._id });
     }catch(err){
+        console.log(err);
+        
         res.status(400).send(err);
     }
 

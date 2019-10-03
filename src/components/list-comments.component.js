@@ -9,12 +9,30 @@ class Comment extends Component {
       this.upvotes = React.createRef();
       this.downvotes = React.createRef();
       this.handleUpvoteDownvote = this.handleUpvoteDownvote.bind(this);
-
       this.state = {
         upvoted : false,
         downvoted : false
       }
 
+    }
+    componentDidMount(){
+      //query redis to determine user comments upvote downvote status to set state
+      const jwt = sessionStorage.getItem("jwt-token");
+      if(jwt === null){
+        console.log('not logged in');
+      }
+      else{
+        const headers = { headers: {
+          "Accept": "application/json",
+          "Content-type": "application/json",
+          "auth-header": jwt,
+          }
+        }
+        axios.post('http://localhost:5000/api/cache/updownstate', {'commentid' : this.props.comment._id }, headers)
+          .then(resp => this.setState(resp.data))
+          .catch(err => console.log(err));  
+        }
+    
     }
 
     handleUpvoteDownvote(e){
@@ -39,26 +57,30 @@ class Comment extends Component {
         this.setState({downvoted : true});     
       }
       console.log(json);
-      this.props.socket.send(JSON.stringify(json));
       const jwt = sessionStorage.getItem("jwt-token");
       if(jwt === null){
         console.log('not logged in');
         window.location = '/login';
       }
-      const headers = { headers: {
-        "Accept": "application/json",
-        "Content-type": "application/json",
-        "auth-header": jwt,
+      else {
+        this.props.socket.send(JSON.stringify(json));
+        const headers = { headers: {
+          "Accept": "application/json",
+          "Content-type": "application/json",
+          "auth-header": jwt,
+          }
         }
-      }
-      // sync with db/redis
-      axios.put('http://localhost:5000/api/comments/update', json.data.comment, headers)
-        .then(res => { 
-          console.log(res);
-          
-        })
-        .catch(err => console.log(err));
-      }
+        console.log("calling servie");
+        
+        // sync with db/redis
+        axios.put('http://localhost:5000/api/comments/update', json.data.comment, headers)
+          .then(res => { 
+            console.log(res);
+            
+          })
+          .catch(err => console.log(err));
+        }
+    }
 
     render() {
       return (
