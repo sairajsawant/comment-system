@@ -70,12 +70,13 @@ class Comment extends Component {
           "auth-header": jwt,
           }
         }
-        console.log("calling servie");
-        
-        // sync with db/redis
+        // sync with mongo
         axios.put('http://localhost:5000/api/comments/update', json.data.comment, headers)
           .then(res => { 
             console.log(res);
+            axios.put('http://localhost:5000/api/cache/updownstate', {'commentid' : json.data.comment._id, upvoted : (this.state.upvoted ? 1 : 0) }, headers)
+            .then(resp => this.setState(resp.data))
+            .catch(err => console.log(err));  
             
           })
           .catch(err => console.log(err));

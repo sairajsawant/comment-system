@@ -21,9 +21,14 @@ router.post('/updownstate', verify , async (req, res) => {
     
 })
 
-router.put('/updownstate',async (req, res) => {
+router.put('/updownstate', verify ,async (req, res) => {
     
-
+    console.log(req.body);
+    client.hset(req.user._id, req.body.commentid , (req.body.upvoted ? 1 : -1)  , function (err ,resp) {
+        console.log(resp);
+        
+    })
+    
 
 });
 
