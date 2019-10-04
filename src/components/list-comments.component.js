@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import cogoToast from 'cogo-toast';
 import axios from 'axios';
 
 class Comment extends Component {
@@ -40,29 +41,34 @@ class Comment extends Component {
       console.log(this.props);
       const json = { type: e.target.name };
       json.data = this.props;
-      if(e.target.name === "upvote"){
-        if(this.state.downvoted){
-          json.data.comment.downvotes--;
-          this.setState({downvoted : false});
-        }
-        json.data.comment.upvotes++;
-        this.setState({upvoted : true});  
-      }
-      else {
-        if(this.state.upvoted){
-          json.data.comment.upvotes--;
-          this.setState({upvoted : false});
-        }
-        json.data.comment.downvotes++;
-        this.setState({downvoted : true});     
-      }
       console.log(json);
       const jwt = sessionStorage.getItem("jwt-token");
       if(jwt === null){
-        console.log('not logged in');
-        window.location = '/login';
+    //    console.log('not logged in');
+      const { hide } = cogoToast.warn('Click to login & upvote/downvote.', {
+        onClick: () => {
+          hide();
+          window.location = '/login';
+        },
+      });
       }
       else {
+        if(e.target.name === "upvote"){
+          if(this.state.downvoted){
+            json.data.comment.downvotes--;
+            this.setState({downvoted : false});
+          }
+          json.data.comment.upvotes++;
+          this.setState({upvoted : true});  
+        }
+        else {
+          if(this.state.upvoted){
+            json.data.comment.upvotes--;
+            this.setState({upvoted : false});
+          }
+          json.data.comment.downvotes++;
+          this.setState({downvoted : true});     
+        }
         this.props.socket.send(JSON.stringify(json));
         const headers = { headers: {
           "Accept": "application/json",

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import cogoToast from 'cogo-toast';
 import axios from 'axios';
 
 export default class AddComment extends Component {
@@ -30,7 +31,12 @@ export default class AddComment extends Component {
       const jwt = sessionStorage.getItem("jwt-token");
       if(jwt === null){
         console.log('not logged in');
-        window.location = '/login';
+        const { hide } = cogoToast.warn('Click to login & comment', {
+          onClick: () => {
+            hide();
+            window.location = '/login';
+          },
+        });
       }
       else {
       const headers = { headers: {
@@ -48,7 +54,8 @@ export default class AddComment extends Component {
           this.setState({content : ''})
           
         })
-        .catch(err => console.log(err));
+        .catch(err => cogoToast.error('Failed adding comment, please try again!', { hideAfter : 5 })
+        .then(() => this.setState({content : ''})));
       }
     }
    

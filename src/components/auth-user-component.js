@@ -1,5 +1,6 @@
 import React, { Component } from "react"
 import axios from "axios"
+import cogoToast from 'cogo-toast';
 
 export default class AuthUser  extends Component {
 
@@ -38,9 +39,13 @@ export default class AuthUser  extends Component {
             .then(res => {
               console.log(res.headers['auth-header']);
               sessionStorage.setItem("jwt-token",res.headers['auth-header']);
-              window.location = '/';
+              cogoToast.success('Logged in successfully!', { hideAfter : 5 })
+                  .then(() => window.location = '/')
             })
-            .catch(err => console.log(err));
+            .catch(err =>
+              cogoToast.error('Login failed, please check your credentials & try again!', { hideAfter : 5 })
+              .then(() => this.setState({username : '', password : ''}))
+              );
         
       }
       render() {
