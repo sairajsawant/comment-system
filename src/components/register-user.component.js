@@ -1,5 +1,7 @@
 import React, { Component } from "react"
 import axios from "axios"
+import cogoToast from 'cogo-toast';
+
 
 export default class RegisterUser extends Component {
 
@@ -52,7 +54,24 @@ export default class RegisterUser extends Component {
             hash : this.state.password
         }
         axios.post('http://localhost:5000/api/users/register', user)
-            .then(res => console.log(res.data))
+            .then(res => {
+              const authData = {
+                username : this.state.username,
+                password : this.state.password
+            }
+              axios.post('http://localhost:5000/api/users/login', authData)
+              .then(res => {
+                console.log(res.headers['auth-header']);
+                sessionStorage.setItem("jwt-token",res.headers['auth-header']);
+                cogoToast.success('Logged in successfully!', { hideAfter : 5 })
+                    .then(() => window.location = '/')
+              })
+              .catch(err => {
+
+              });
+              cogoToast.success('Welcome to the family!', { hideAfter : 4 })
+                .then(() => window.location = '/')
+              })
             .catch(err => console.log(err));
         
   

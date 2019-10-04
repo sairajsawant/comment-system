@@ -1,7 +1,9 @@
 const router = require('express').Router();
 const verify = require('./verifyToken'); 
 const redis = require("redis");
-client = redis.createClient(6379, '172.17.0.3')
+require('dotenv').config();
+
+client = redis.createClient(process.env.REDIS_PORT, process.env.REDIS_IP)
 
 client.on("error", function (err) {
   console.log("Error " + err);

@@ -12,8 +12,6 @@ router.get('/' , (req,res) => {
 
 router.post('/add', verify,async (req,res) => {
 
-    console.log("called");
-    
     console.log(req.user);
     const comment = new Comment({
 
@@ -31,8 +29,6 @@ router.post('/add', verify,async (req,res) => {
 })
 
 router.put('/update/', verify, async (req,res) => {
-
-    console.log("called update");
     
     console.log(req.user);
     try {

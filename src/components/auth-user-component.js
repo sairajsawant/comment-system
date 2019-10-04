@@ -42,10 +42,19 @@ export default class AuthUser  extends Component {
               cogoToast.success('Logged in successfully!', { hideAfter : 5 })
                   .then(() => window.location = '/')
             })
-            .catch(err =>
-              cogoToast.error('Login failed, please check your credentials & try again!', { hideAfter : 5 })
-              .then(() => this.setState({username : '', password : ''}))
-              );
+            .catch(err => {
+              if(err.response.data.registered === false){
+                const {hide} = cogoToast.error('You have not registered, click here to register!', {
+                  onClick: () => {
+                    hide();
+                    window.location = '/register';
+                  },
+                })
+              }
+              else
+                cogoToast.error('Login failed, please check your credentials & try again!', { hideAfter : 5 })
+                .then(() => this.setState({username : '', password : ''}))
+            });
         
       }
       render() {

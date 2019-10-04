@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 import cogoToast from 'cogo-toast';
 import axios from 'axios';
 
@@ -17,7 +16,7 @@ class Comment extends Component {
 
     }
     componentDidMount(){
-      //query redis to determine user comments upvote downvote status to set state
+      //query redis to determine user comments upvote downvote status to set state - could be optimized
       const jwt = sessionStorage.getItem("jwt-token");
       if(jwt === null){
         console.log('not logged in');
@@ -44,8 +43,7 @@ class Comment extends Component {
       console.log(json);
       const jwt = sessionStorage.getItem("jwt-token");
       if(jwt === null){
-    //    console.log('not logged in');
-      const { hide } = cogoToast.warn('Click to login & upvote/downvote.', {
+       const { hide } = cogoToast.warn('Click to login & upvote/downvote.', {
         onClick: () => {
           hide();
           window.location = '/login';

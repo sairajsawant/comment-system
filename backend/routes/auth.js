@@ -35,11 +35,11 @@ router.post('/register',async (req, res) => {
 router.post('/login',async (req, res) => {
     
     const user = await User.findOne({username : req.body.username});
-    if(! user ) return res.status(400).send('username does not exist, please register!');
+    if(! user ) return res.status(400).json({ registered : false});
 
     console.log(user);
     const validPass = await bcrypt.compare(req.body.password, user.hash);
-    if(!validPass) return res.status(400).send('Password is invalid!');
+    if(!validPass) return res.status(400).json({password : false});
 
     //create token and add it to header
     const token = jwt.sign({ _id : user._id},process.env.TOKEN_SECRET);
