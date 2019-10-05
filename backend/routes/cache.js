@@ -14,11 +14,11 @@ router.post('/updownstate', verify , async (req, res) => {
     console.log(req.body);
     client.hget(req.user._id, req.body.commentid , function (err ,resp) {
         if(resp == 1)
-            res.json({'upvoted': true})
+            res.json({'upvoted': true, 'publisher': req.user._id})
         else if(resp == -1)
-            res.json({'downvoted': true})
+            res.json({'downvoted': true, 'publisher': req.user._id})
         else
-            res.json({'upvoted' : false, 'downvoted' : false })
+            res.json({'upvoted' : false, 'downvoted' : false, 'publisher': req.user._id })
     })
     
 })

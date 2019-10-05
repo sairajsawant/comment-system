@@ -11,7 +11,8 @@ class Comment extends Component {
       this.handleUpvoteDownvote = this.handleUpvoteDownvote.bind(this);
       this.state = {
         upvoted : false,
-        downvoted : false
+        downvoted : false,
+        publisher : ''
       }
 
     }
@@ -29,7 +30,7 @@ class Comment extends Component {
           }
         }
         axios.post('http://localhost:5000/api/cache/updownstate', {'commentid' : this.props.comment._id }, headers)
-          .then(resp => this.setState(resp.data))
+          .then(resp =>{ this.setState(resp.data)})
           .catch(err => console.log(err));  
         }
     
@@ -51,6 +52,12 @@ class Comment extends Component {
       });
       }
       else {
+        console.log(this.state.publisher);
+        
+        if(this.state.publisher == json.data.comment.user._id){
+          cogoToast.error(`You cant ${e.target.name} your own comment!`, { hideAfter : 5 })
+        }
+        else {
         if(e.target.name === "upvote"){
           if(this.state.downvoted){
             json.data.comment.downvotes--;
@@ -78,6 +85,7 @@ class Comment extends Component {
         axios.put('http://localhost:5000/api/comments/update', json.data.comment, headers)
           .then(res => { 
             console.log(res);
+            //sync wtih redis
             axios.put('http://localhost:5000/api/cache/updownstate', {'commentid' : json.data.comment._id, upvoted : (this.state.upvoted ? 1 : 0) }, headers)
             .then(resp => this.setState(resp.data))
             .catch(err => console.log(err));  
@@ -85,6 +93,7 @@ class Comment extends Component {
           })
           .catch(err => console.log(err));
         }
+      }
     }
 
     render() {
