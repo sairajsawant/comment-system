@@ -99,9 +99,7 @@ class Comment extends Component {
 
     render() {
       let likeimgurl = this.state.upvoted ? process.env.PUBLIC_URL + '/logos/liked.png' : process.env.PUBLIC_URL + '/logos/like.png';
-      console.log(this.state.upvoted, likeimgurl);
       let dislikeimgurl = this.state.downvoted ? process.env.PUBLIC_URL + '/logos/disliked.png' : process.env.PUBLIC_URL + '/logos/dislike.png';
-      console.log(dislikeimgurl);
       
       return (
         <div className="card">
@@ -115,8 +113,9 @@ class Comment extends Component {
             </div>
             <div className="col-md-2 px-3">
               <div>
-                <div> <img style={ {width: '29%', margintop: '10px'} } onClick={this.handleUpvoteDownvote} name="upvote" src={likeimgurl} /> <br /><span ref={this.upvotes} style={{fontSize: '12px'}}>{this.props.comment.upvotes}</span><br /></div>
-                <div> <img style={ {width:'29%', margintop: '10px'} } onClick={this.handleUpvoteDownvote} name="downvote" src={dislikeimgurl}   /><br /><span ref={this.downvotes} style={{fontSize: '12px'}}>{this.props.comment.downvotes}</span><br /></div>
+                <br/>
+                <div> <input type="image" disabled={this.state.upvoted} onClick={this.handleUpvoteDownvote} name="upvote" src={likeimgurl}  alt="upvote" width="30" height="30" /><span ref={this.upvotes} style={{fontSize: '16px', 'fontWeight': 'bolder', 'verticalAlign':'6px'}}>&nbsp;&nbsp;&nbsp;{this.props.comment.upvotes}</span> </div>
+                <div> <input type="image" disabled={this.state.downvoted} onClick={this.handleUpvoteDownvote} name="downvote" src={dislikeimgurl}  alt="downvote" width="30" height="30" /><span ref={this.downvotes} style={{fontSize: '16px', 'fontWeight': 'bolder', 'verticalAlign':'6px'}}>&nbsp;&nbsp;&nbsp;{this.props.comment.downvotes}</span><br/></div>   
               </div>
             </div>
           </div>
