@@ -3,7 +3,7 @@
 #### Single Page Application (SPA) to demonstrate real-time comments using MERN Stack.
 
 ## Video Walkthrough of Realtime Commenting System
-> https://www.youtube.com/watch?v=X79M2qxsrig
+> https://youtu.be/8bGpU7fMBU0
 
 ## Installation & Setup
 > Will update this one fine day
