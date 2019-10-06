@@ -63,13 +63,13 @@ export default class RegisterUser extends Component {
               .then(res => {
                 console.log(res.headers['auth-header']);
                 sessionStorage.setItem("jwt-token",res.headers['auth-header']);
-                cogoToast.success('Logged in successfully!', { hideAfter : 5 })
+                cogoToast.success('Logged in successfully!', { hideAfter : 3 })
                     .then(() => window.location = '/')
               })
               .catch(err => {
 
               });
-              cogoToast.success('Welcome to the family!', { hideAfter : 4 })
+              cogoToast.success('Welcome to the family!', { hideAfter : 3 })
                 .then(() => window.location = '/')
               })
             .catch(err => console.log(err));

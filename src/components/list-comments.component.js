@@ -106,9 +106,9 @@ class Comment extends Component {
           <div className="row">
             <div className="col-md-10 px-3">
               <div className="card-block px-3">
-                <h5 className="card-title" style={{marginTop: '10px'}}>{this.props.comment.user.firstName} {this.props.comment.user.lastName}</h5>
+                <h5 className="card-title text-dark" style={{marginTop: '10px', 'fontWeight':'bolder'}}>{this.props.comment.user.firstName} {this.props.comment.user.lastName}</h5>
                 <p className="card-text" style={{fontSize: '16px'}}>{this.props.comment.content }</p>
-                <p style={{fontSize: '13px'}}><img src={process.env.PUBLIC_URL + '/logos/clock.png'} style={{width: '13px', height: '13px'}} /><b> {moment(Date.parse(this.props.comment.createdAt)).fromNow()}</b></p>
+                <p className="text-muted" style={{fontSize: '13px'}}><img src={process.env.PUBLIC_URL + '/logos/clock.png'} style={{width: '13px', height: '13px'}} />&nbsp;&nbsp;{moment(Date.parse(this.props.comment.createdAt)).fromNow()}</p>
               </div>
             </div>
             <div className="col-md-2 px-3">
