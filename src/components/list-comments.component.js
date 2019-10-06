@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import cogoToast from 'cogo-toast';
+import moment from 'moment';
 import axios from 'axios';
 
 class Comment extends Component {
@@ -97,18 +98,29 @@ class Comment extends Component {
     }
 
     render() {
+      let likeimgurl = this.state.upvoted ? process.env.PUBLIC_URL + '/logos/liked.png' : process.env.PUBLIC_URL + '/logos/like.png';
+      console.log(this.state.upvoted, likeimgurl);
+      let dislikeimgurl = this.state.downvoted ? process.env.PUBLIC_URL + '/logos/disliked.png' : process.env.PUBLIC_URL + '/logos/dislike.png';
+      console.log(dislikeimgurl);
+      
       return (
-      <div>
-        <div className="p-1"><h5>{this.props.comment.user.firstName} {this.props.comment.user.lastName}</h5></div>
-        <div>
-        <h6>{this.props.comment.content }</h6>
-        <div align="right">  
-       <div><span ref={this.upvotes} >{this.props.comment.upvotes}</span> <button name="upvote" disabled={this.state.upvoted} onClick={this.handleUpvoteDownvote}>Upvote</button></div>
-        <div><span ref={this.downvotes}>{this.props.comment.downvotes}</span>  <button name="downvote" disabled={this.state.downvoted} onClick={this.handleUpvoteDownvote}>Downvote</button></div>
+        <div className="card">
+          <div className="row">
+            <div className="col-md-10 px-3">
+              <div className="card-block px-3">
+                <h5 className="card-title" style={{marginTop: '10px'}}>{this.props.comment.user.firstName} {this.props.comment.user.lastName}</h5>
+                <p className="card-text" style={{fontSize: '16px'}}>{this.props.comment.content }</p>
+                <p style={{fontSize: '13px'}}><img src={process.env.PUBLIC_URL + '/logos/clock.png'} style={{width: '13px', height: '13px'}} /><b> {moment(Date.parse(this.props.comment.createdAt)).fromNow()}</b></p>
+              </div>
+            </div>
+            <div className="col-md-2 px-3">
+              <div>
+                <div> <img style={ {width: '29%', margintop: '10px'} } onClick={this.handleUpvoteDownvote} name="upvote" src={likeimgurl} /> <br /><span ref={this.upvotes} style={{fontSize: '12px'}}>{this.props.comment.upvotes}</span><br /></div>
+                <div> <img style={ {width:'29%', margintop: '10px'} } onClick={this.handleUpvoteDownvote} name="downvote" src={dislikeimgurl}   /><br /><span ref={this.downvotes} style={{fontSize: '12px'}}>{this.props.comment.downvotes}</span><br /></div>
+              </div>
+            </div>
+          </div>
         </div>
-        </div>
-       
-      </div>
     )
 
     }
